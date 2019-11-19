@@ -27,7 +27,7 @@ class Environment:
             
             
     def reset(self):
-        
+        #reset the state to the initial state after every step
         self.steps = 0
         self.state = np.zeros(2**num_qubits)
         self.state[0] = 1
@@ -40,7 +40,7 @@ class Environment:
         qc.initialize(self.state, [0, 1])
 
         if action[0] == "X":
-            qc.x(action[1])
+            qc.x(action[1])#apply X gate on qubit action[1]
         elif action[0] == "Y":
             qc.y(action[1])
         elif action[0] == "Z":
@@ -66,7 +66,7 @@ class Environment:
         
     def get_reward(self):
         
-        self.inner_product = np.abs(np.vdot(self.state, self.target_state))**2
+        self.inner_product = np.abs(np.vdot(self.state, self.target_state))**2 #calculate the distance between initial state and target state
         
         if(np.abs(self.inner_product - 1) < 10e-6):
             self.reward = 1 / self.steps
