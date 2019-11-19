@@ -53,6 +53,7 @@ class cnn(vanila_neural_net):
         dropout=self.dropout,
         input_shape=(4,2)
      ))
+    model.add(layers.LayerNormalization())
     model.add(layers.Dense( self.output_sz, activation='relu'))
     model.compile(optimizer=optimizers.Adam(lr=self.alpha),
                   loss='mean_squared_error',
