@@ -9,6 +9,4 @@ Use machine learning to place gates that solve a simple problem (like a sum, sub
 3. @dacozai dacozai
 4. @sitong1011 sitong1011
 5. @YinjieZhou YinjieZhou
-.
-.
 
