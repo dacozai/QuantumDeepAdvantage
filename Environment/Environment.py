@@ -1,4 +1,4 @@
-from modules import *
+from Environment.modules import *
 from qiskit import IBMQ
 from qiskit.providers import aer
 
@@ -17,43 +17,47 @@ class Environment:
     """
     
     def __init__(self, num_qubits):
-        
+        self.MAXIMUM_MOVE = 10 
+        self.MINIMAL_VALUE = 10e-6
         self.provider = aer.aerprovider.AerProvider()
-        self.backend = provider.get_backend('statevector_simulator')
+        self.backend = self.provider.get_backend('statevector_simulator')
+        self.num_qubits = num_qubits
         
         self.target_state = np.array([1/np.sqrt(2), 0, 0, 1/np.sqrt(2)])
-        
         self.reset()
             
             
     def reset(self):
         #reset the state to the initial state after every step
         self.steps = 0
-        self.state = np.zeros(2**num_qubits)
+        self.state = np.zeros(2**self.num_qubits)
         self.state[0] = 1
         
         self.inner_product = np.abs(np.vdot(self.state, self.target_state))**2
             
     def step(self, action):
-        #apply step on qubit
+        # apply step on qubit
         qc = QuantumCircuit(2)
         qc.initialize(self.state, [0, 1])
-
+        # apply X gate on qubit action[1]
         if action[0] == "X":
-            qc.x(action[1])#apply X gate on qubit action[1]
+            qc.x(action[1])
         elif action[0] == "Y":
             qc.y(action[1])
         elif action[0] == "Z":
             qc.z(action[1])
+        elif action[0] == "T":
+            qc.t(action[1])
         elif action[0] == "H":
             qc.h(action[1])
         elif action[0] == "CX":
+            print(action)
             qc.cx(action[1][0], action[1][1])
         elif action[0] == "CCX":
             qc.ccx(action[1][0], action[1][1], action[1][2])
             
         qobj = assemble(qc)
-        job = backend.run(qobj)
+        job = self.backend.run(qobj)
         result = job.result()        
         self.state = np.array(result.data()['statevector'])
         self.state = self.state[:,0] + 1j * self.state[:,1]
@@ -84,16 +88,15 @@ class Environment:
         
         self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
         
-        if(np.abs(self.inner_product - 1) < 10e-6):
+        if(np.abs(self.inner_product - 1) < self.MINIMAL_VALUE):
             return 1 / self.steps
-        elif self.steps == 100:
-            return inner_product / self.steps
+        elif self.steps == self.MAXIMUM_MOVE:
+            return ( self.inner_product - 1) / self.steps
         else:
             return 0
 
     def is_terminated(self):
-        #detect if the steps terminated or not
-        if (np.abs(self.inner_product - 1) < 10e-6) or self.steps == 100:
+        if (np.abs(self.inner_product - 1) < 10e-6) or self.steps == self.MAXIMUM_MOVE:
             return True
         else:
             return False
