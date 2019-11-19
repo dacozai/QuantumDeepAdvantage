@@ -22,8 +22,8 @@ def learning(bot, env):
     bot.total_reward += reward
     ct+=1
 
-  bot.total_reward += env.reward()
   bot.learn_from_transition(state, reward, env.is_terminated())
+  bot.total_reward += env.reward()
   print("It's Done")
   print("The total reward is ", bot.total_reward)
   env.reset()

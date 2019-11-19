@@ -15,34 +15,33 @@ import copy
 from Agent.network.nets import *
 
 class dqn:
-    """
-    Deep Q Network
+  """
+  Deep Q Network
 
-    Action Space: {x1, x2, y1, y2, z1, z2, h1, h2, c12, c21}
+  Action Space: {x1, x2, y1, y2, z1, z2, h1, h2, c12, c21}
 
-    Attribute
-    self.num_qubits: 
-    self.input_dim:
+  Attribute
+  self.num_qubits: 
+  self.input_dim:
 
-    Methods
-    parse_action: convert 0 to 9 to specific gate and its argument
-    """
-    def __init__(self, num_qubits=2, num_action=10, gamma=0.9, alpha=.01, epsilon=0.01):
-        self.num_qubits = num_qubits
-        self.input_sz = pow(2, self.num_qubits) 
-        self.input_dim = ( 1, self.input_sz )
-        self.num_action = num_action 
-        self.init = False
-        self.gamma = gamma
-        self.alpha = alpha
-        self.epsilon = epsilon
+  Methods
+  parse_action: convert 0 to 9 to specific gate and its argument
+  """
+  def __init__(self, num_qubits=2, num_action=10, gamma=0.9, alpha=.01, epsilon=0.01):
+      self.num_qubits = num_qubits
+      self.input_sz = pow(2, self.num_qubits) 
+      self.input_dim = ( 1, self.input_sz )
+      self.num_action = num_action 
+      self.init = False
+      self.gamma = gamma
+      self.alpha = alpha
+      self.epsilon = epsilon
 
-        self.net_instance = vanila_neural_net(self.input_sz, self.num_action, self.input_dim, self.alpha)
-        self.q_network = self.net_instance.init_model()
+      self.net_instance = vanila_neural_net(self.input_sz, self.num_action, self.input_dim, self.alpha)
+      self.q_network = self.net_instance.init_model()
 
-        self.total_reward = 0
+      self.total_reward = 0
     
-<<<<<<< HEAD
   def parse_action(self, action_num):
     if action_num == 0 or action_num == 1:
       return ["X", action_num]
@@ -73,77 +72,45 @@ class dqn:
           indx_list = [indx]
         elif max_val == q_values[indx]:
           indx_list.append(indx)
-=======
-        def parse_action(self, action_num):
-            if action_num == 0 or action_num == 1:
-                return ["X", action_num]
-            elif action_num == 2 or action_num == 3:
-                return ["Y", action_num-2]
-            elif action_num == 4 or action_num == 5:
-                return ["Z", action_num-4]
-            elif action_num == 6 or action_num == 7:
-                return ["H", action_num-6]
-
-            print("action number is ",action_num)
-            return ["CX", [action_num-8, 1-(action_num-8)]]
-  
-        # def reverse_action(self, action_dic):
-
-        def find_max_val_indx(self, q_values):
-            init_flag = False
-            indx_list = []
-            max_val:float = None
-            for indx in range(self.num_action):
-                if not init_flag:
-                    max_val = q_values[indx] 
-                    indx_list.append(indx)
-                    init_flag = True
-                else:
-                    if max_val < q_values[indx]:
-                        max_val = q_values[indx]
-                        indx_list = [indx]
-                    elif max_val == q_values[indx]:
-                        indx_list.append(indx)
->>>>>>> cac72e61a848aa7b99ba328aca25905e701f9bd2
     
-                        return np.random.choice(indx_list) 
+    return np.random.choice(indx_list) 
 
-                    def get_action(self, state):
-                        self.prev_state = copy.deepcopy(state.reshape(1, self.input_sz))
-                        favor_action = None
-                        if np.random.uniform(0, 1) < self.epsilon:
-                            favor_action = np.random.choice(range(10))
-                        else:
-                            q_values = self.q_network.predict(self.prev_state)[0]
-                            favor_action = self.find_max_val_indx(q_values)
+  def get_action(self, state):
+    self.prev_state = copy.deepcopy(state.reshape(1, self.input_sz))
+    favor_action = None
+    if np.random.uniform(0, 1) < self.epsilon:
+      favor_action = np.random.choice(range(10))
+    else:
+      q_values = self.q_network.predict(self.prev_state)[0]
+      favor_action = self.find_max_val_indx(q_values)
 
-                            self.prev_action = favor_action
-                            return self.parse_action(favor_action)
+    self.prev_action = favor_action
+    return self.parse_action(favor_action)
 
-                        def learn_from_transition(self, next_state, reward, terminate):
-                            if not self.init:
-                                self.init = True
-                                return
+  def learn_from_transition(self, next_state, reward, terminate):
+    if not self.init:
+      self.init = True
+      return
 
-                            state = self.prev_state
-                            n_state = copy.deepcopy(next_state.reshape(self.input_dim))
-                            action = self.prev_action
-                            q_table = self.q_network.predict(state)
+    state = self.prev_state
+    n_state = copy.deepcopy(next_state.reshape(self.input_dim))
+    action = self.prev_action
+    q_table = self.q_network.predict(state)
 
-                            q_values = 0
-                            if not terminate:
-                                q_values = np.max(q_table[0])
-                                print("q_values is ",q_values)
-                            else:
-                                self._init = False
-                                self._prev_action = None
-                                self._prev_state = None
+    q_values = 0
+    if not terminate:
+      q_values = np.max(q_table[0])
+      print("q_values is ",q_values)
+    else:
+      self._init = False
+      self._prev_action = None
+      self._prev_state = None
 
-                                q_table[0][action] = reward + self.gamma * q_values
-                                self.q_network.fit(state, q_table, batch_size=1, verbose=0)
+    q_table[0][action] = reward + self.gamma * q_values
+    self.q_network.fit(state, q_table, batch_size=1, verbose=0)
 
-                                def reset(self):
-                                    self.init = False
-                                    self.q_network = self.net_instance.init_model()
-                                    # self.q_network.save_weights(filepath +'train_' + str(ag_times) + '.h5')
+  def reset(self):
+    self.init = False
+    self.q_network = self.net_instance.init_model()
+    # self.q_network.save_weights(filepath +'train_' + str(ag_times) + '.h5')
 
