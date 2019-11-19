@@ -35,7 +35,7 @@ class Environment:
         self.inner_product = np.abs(np.vdot(self.state, self.target_state))**2
             
     def step(self, action):
-        
+        #apply step on qubit
         qc = QuantumCircuit(2)
         qc.initialize(self.state, [0, 1])
 
@@ -75,6 +75,7 @@ class Environment:
             return 0
 
     def is_terminated(self):
+        #detect if the steps terminated or not
         if (np.abs(self.inner_product - 1) < 10e-6) or self.steps == 100:
             return True
         else:

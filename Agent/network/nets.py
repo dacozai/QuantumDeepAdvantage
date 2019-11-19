@@ -1,12 +1,32 @@
 class vanila_neural_net:
+
+	"""
+  	A simple neural network
+  	
+  	Attributes
+    ----------
+    input_sz: int
+     the number of neurons in the input layer
+
+    output_sz: int 
+     the number of neurons in the output layer
+
+    input_dim: int 
+     the size of the input vector
+     
+    Methods
+     model: layers of the simple neural network
+  	
+  	"""
   def __init__(self, input_sz, output_sz, input_dim, num_hidden_layer=1):
-    
+  
     self.input_sz = input_sz
     self.output_sz = output_sz
     self.input_dim = input_dim
     self.num_hidden_layer = num_hidden_layer
 
   def model(self):
+  
     model = tf.keras.models.Sequential([
       tf.keras.layers.Flatten(input_shape=(input_dim)),
       tf.keras.layers.Dense(input_sz, activation='relu'),
@@ -17,7 +37,25 @@ class vanila_neural_net:
 
 
 class lstm_neural_net:
+
+  """
+  an LSTM neural network
+  
+  Attributes
+    ----------
+    input_sz: int the number of neurons in the input layer
+
+    output_sz: int
+    the number of neurons in the output layer
+
+    input_dim: int
+    the size of the input vector
+    
+  """
+  
   def __init__(self, input_sz, output_sz, input_dim, num_hidden_layer=1, dpr=0.0):
+  
+    
     self.num_hidden_layer = num_hidden_layer
     self.lstm1 = tf.keras.layers.LSTM(
       input_sz, 
@@ -35,6 +73,7 @@ class lstm_neural_net:
     self.ln2 = tf.keras.layers.LayerNormalization()
 
   def model(self):
+  
     model = tf.keras.models.Sequential([
       tf.keras.layers.LSTM(input_sz, kernel_initializer="glorot_uniform",input_shape=input_dim)
       tf.keras.layers.Dropout(dpr)
