@@ -2,8 +2,27 @@ import tensorflow as tf
 from tensorflow.keras import datasets, layers, models, optimizers
 
 class vanila_neural_net:
+
+	"""
+  	A simple neural network
+  	
+  	Attributes
+    ----------
+    input_sz: int
+     the number of neurons in the input layer
+
+    output_sz: int 
+     the number of neurons in the output layer
+
+    input_dim: int 
+     the size of the input vector
+     
+    Methods
+     model: layers of the simple neural network
+  	
+  	"""
   def __init__(self, input_sz, output_sz, input_dim, alpha, num_hidden_layer=1):
-    
+  
     self.input_sz = input_sz
     self.output_sz = output_sz
     self.input_dim = input_dim

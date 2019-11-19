@@ -36,6 +36,7 @@ class Environment:
         self.inner_product = np.abs(np.vdot(self.state, self.target_state))**2
             
     def step(self, action):
+        # apply step on qubit
         qc = QuantumCircuit(2)
         qc.initialize(self.state, [0, 1])
         # apply X gate on qubit action[1]
