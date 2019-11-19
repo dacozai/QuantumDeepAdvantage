@@ -61,6 +61,25 @@ class vanila_neural_net:
                   metrics=['accuracy'])
     return model
 
+class doubled_lstm(doubled_neural_net):
+  def __init__(self, input_sz, output_sz, input_dim, alpha, num_hidden_layer=1, dropout=0.0) -> None:
+    super().__init__(input_sz, output_sz, input_dim, alpha)
+
+  def init_model(self) -> None:
+    model = models.Sequential()
+    model.add(layers.LSTM(
+        self.input_sz, 
+        activation='relu',
+        recurrent_initializer='glorot_uniform',
+        dropout=self.dropout,
+        input_shape=self.input_dim
+     ))
+    model.add(layers.Dense( self.output_sz, activation='relu'))
+    model.compile(optimizer=optimizers.Adam(lr=self.alpha),
+                  loss='mean_squared_error',
+                  metrics=['accuracy'])
+    return model
+
 class lstm(vanila_neural_net):
 
   def __init__(self, input_sz, output_sz, input_dim, alpha, num_hidden_layer=1, dropout=0.0) -> None:

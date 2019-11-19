@@ -37,7 +37,7 @@ class dqn:
       self.alpha = alpha
       self.epsilon = epsilon
 
-      self.net_instance = double_neural_net(self.input_sz, self.num_action, self.input_dim, self.alpha)
+      self.net_instance = doubled_neural_net(self.input_sz, self.num_action, self.input_dim, self.alpha)
       self.q_network = self.net_instance.init_model()
 
       self.total_reward = 0
@@ -77,8 +77,6 @@ class dqn:
 
   def get_action(self, state):
 
-    separate_state = np.row_stack([np.real(state), np.imag(state)])
-
     self.prev_state = copy.deepcopy(state.reshape(1, self.input_sz))
     favor_action = None
     if np.random.uniform(0, 1) < self.epsilon:
@@ -96,7 +94,7 @@ class dqn:
       return
 
     state = self.prev_state
-    n_state = copy.deepcopy(next_state.reshape(self.input_dim))
+    n_state = copy.deepcopy(next_state.reshape(self.input_dim[1]))
     action = self.prev_action
     q_table = self.q_network.predict(np.row_stack([np.real(state), np.imag(state)]))
 
@@ -110,7 +108,7 @@ class dqn:
       self._prev_state = None
 
     q_table[0][action] = reward + self.gamma * q_values
-    self.q_network.fit(state, q_table, batch_size=1, verbose=0)
+    self.q_network.fit(np.row_stack([np.real(state), np.imag(state)]), q_table, batch_size=1, verbose=0)
 
   def reset(self):
     self.init = False
@@ -121,7 +119,7 @@ class drqn(dqn):
 
   def __init__(self, num_qubits):
     super().__init__(num_qubits=num_qubits)
-    self.net_instance = lstm(self.input_sz, self.num_action, self.input_dim, self.alpha)
+    self.net_instance = doubled_lstm(self.input_sz, self.num_action, self.input_dim, self.alpha)
     self.q_network = self.net_instance.init_model()
 
   def get_action(self, state):
@@ -130,7 +128,7 @@ class drqn(dqn):
     if np.random.uniform(0, 1) < self.epsilon:
       favor_action = np.random.choice(range(10))
     else:
-      q_values = self.q_network.predict(np.row_stack(np.real(self.prev_state), np.imag(self.prev_state)))[0]
+      q_values = self.q_network.predict(np.row_stack([np.real(self.prev_state), np.imag(self.prev_state)]))[0]
       favor_action = self.find_max_val_indx(q_values)
 
     self.prev_action = favor_action

@@ -6,7 +6,9 @@ NUM_QUBITS = 2
 NUM_SIM = 10
 
 env = Environment(NUM_QUBITS) 
-bot = drqn(num_qubits=NUM_QUBITS)
+
+bot = dqn(num_qubits=NUM_QUBITS)
+#bot = drqn(num_qubits=NUM_QUBITS)
 
 def learning(bot, env):
   #for sim_times in range(NUM_SIM):
@@ -37,7 +39,7 @@ def learning(bot, env):
   return bot.total_reward
 
 reward_array = []
-episodes = 5
+episodes = 200
 for num in range(episodes):
   print("Times is "+str(num))
   r = learning(bot, env)
