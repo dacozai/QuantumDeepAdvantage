@@ -63,9 +63,26 @@ class Environment:
         
         self.steps += 1
         
+    def inner_product_measure(self):
+        return np.abs(np.vdot(self.state, self.target_state))**2
+
+    def cross_entropy_measure(self):
+        state_density = np.kron(self.state.conjugate().transpose(), self.state)
+        target_density = np.kron(self.target_state.conjugate().transpose(), self.target_state)
+
+        state_eigs = np.linalg.eigvals(state_density)
+        target_eigs = np.linalg.eigvals(target_density)
+    
+        relative_entropy = 0
+        for i in range(len(state_eigs)):
+            relative_entropy += target_eigs[i] * (np.log(target_eigs[i]) - np.log(state_eigs[i]))
+        return relative_entropy
+        
+        
+
     def reward(self):
         
-        self.inner_product = np.abs(np.vdot(self.state, self.target_state))**2 #calculate the distance between initial state and target state
+        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
         
         if(np.abs(self.inner_product - 1) < 10e-6):
             return 1 / self.steps
