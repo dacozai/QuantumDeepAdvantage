@@ -6,7 +6,7 @@ Use machine learning to place gates that solve a simple problem (like a sum, sub
 ## Members
 1. @SamTonetto SamTonetto
 2. @MakotoNakai MakotoNakai
-3. @dacozai dacozai —
+3. @dacozai dacozai
 4. @sitong1011 sitong1011
 5. @YinjieZhou YinjieZhou
 
