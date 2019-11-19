@@ -27,7 +27,7 @@ class dqn:
   Methods
   parse_action: convert 0 to 9 to specific gate and its argument
   """
-  def __init__(self, num_qubits=2, num_action=10, gamma=0.9, alpha=.01, epsilon=0.01):
+  def __init__(self, num_qubits=2, num_action=12, gamma=0.9, alpha=.01, epsilon=0.01):
       self.num_qubits = num_qubits
       self.input_sz = pow(2, self.num_qubits) 
       self.input_dim = ( 1, self.input_sz )

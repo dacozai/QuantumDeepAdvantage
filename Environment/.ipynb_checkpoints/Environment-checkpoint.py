@@ -26,7 +26,6 @@ class Environment:
         self.target_state = np.array([1/np.sqrt(2), 0, 0, 1/np.sqrt(2)])
         self.reset()
             
-            
     def reset(self):
         #reset the state to the initial state after every step
         self.steps = 0
@@ -61,6 +60,8 @@ class Environment:
         result = job.result()        
         self.state = np.array(result.data()['statevector'])
         self.state = self.state[:,0] + 1j * self.state[:,1]
+        
+        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
 
         
         print('At end of step {}, action is {}, inner_product is {}'.format(self.steps, action, self.inner_product))
@@ -84,8 +85,6 @@ class Environment:
         
     
     def reward(self):
-        
-        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
         
         if(np.abs(self.inner_product - 1) < self.MINIMAL_VALUE):
             return 1 / self.steps

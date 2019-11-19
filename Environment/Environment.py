@@ -60,6 +60,8 @@ class Environment:
         result = job.result()        
         self.state = np.array(result.data()['statevector'])
         self.state = self.state[:,0] + 1j * self.state[:,1]
+        
+        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
 
         
         print('At end of step {}, action is {}, inner_product is {}'.format(self.steps, action, self.inner_product))
@@ -84,14 +86,10 @@ class Environment:
     
     def reward(self):
         
-        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
-        
         if(np.abs(self.inner_product - 1) < self.MINIMAL_VALUE):
-            return 1 / self.steps
-        elif self.steps == self.MAXIMUM_MOVE:
-            return ( self.inner_product - 1) / self.steps
+            return 100 / self.steps
         else:
-            return 0
+            return -1
 
     def is_terminated(self):
         if (np.abs(self.inner_product - 1) < 10e-6) or self.steps == self.MAXIMUM_MOVE:
