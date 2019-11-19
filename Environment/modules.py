@@ -11,7 +11,6 @@ import pprint as pp
 from scipy import linalg
 import time
 import json
-import plotly_express as px
 import pandas as pd
 
 from IPython.display import clear_output
