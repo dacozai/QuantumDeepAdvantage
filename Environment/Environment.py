@@ -26,7 +26,6 @@ class Environment:
         self.target_state = np.array([1/np.sqrt(2), 0, 0, 1/np.sqrt(2)])
         self.reset()
             
-            
     def reset(self):
         #reset the state to the initial state after every step
         self.steps = 0

@@ -23,6 +23,7 @@ def learning(bot, env):
     ct+=1
 
   bot.total_reward += env.reward()
+  bot.learn_from_transition(state, reward, env.is_terminated())
   print("It's Done")
   print("The total reward is ", bot.total_reward)
   env.reset()
@@ -35,6 +36,9 @@ for num in range(episodes):
   print("Times is "+str(num))
   r = learning(bot, env)
   reward_array.append(r)
+  print()
+  print()
+  print()
 
 xAxis = [ num for num in range(episodes)]
 _, ag = plt.subplots()

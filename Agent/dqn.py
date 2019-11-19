@@ -46,17 +46,17 @@ class dqn:
     if action_num == 0 or action_num == 1:
       return ["X", action_num]
     elif action_num == 2 or action_num == 3:
-      return ["Y", action_num-2]
+      return ["Y", action_num%self.num_qubits]
     elif action_num == 4 or action_num == 5:
-      return ["Z", action_num-4]
+      return ["Z", action_num%self.num_qubits]
     elif action_num == 6 or action_num == 7:
-      return ["H", action_num-6]
+      return ["H", action_num%self.num_qubits]
+    elif action_num == 8 or action_num == 9:
+      return ["T", action_num%self.num_qubits]
 
-    print("action number is ",action_num)
-    return ["CX", [action_num-8, 1-(action_num-8)]]
+    # It can be better!!! (Only good in 2 qubits)
+    return [ "CX", [action_num%self.num_qubits, 1-(action_num%self.num_qubits)] ]
   
-  # def reverse_action(self, action_dic):
-
   def find_max_val_indx(self, q_values):
     init_flag = False
     indx_list = []
