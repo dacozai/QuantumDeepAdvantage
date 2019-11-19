@@ -59,6 +59,8 @@ class Environment:
         result = job.result()        
         self.state = np.array(result.data()['statevector'])
         self.state = self.state[:,0] + 1j * self.state[:,1]
+        
+        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
 
         
         self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
@@ -92,7 +94,7 @@ class Environment:
             # return ( self.inner_product - 1) / self.steps
             return -1
         else:
-            return 0
+            return -1
 
     def is_terminated(self):
         if (np.abs(self.inner_product - 1) < 10e-6) or self.steps == self.MAXIMUM_MOVE:
