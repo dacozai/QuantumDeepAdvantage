@@ -1,46 +1,21 @@
+import tensorflow as tf
+from tensorflow.keras import datasets, layers, models, optimizers
+
 class vanila_neural_net:
-  def __init__(self, input_sz, output_sz, input_dim, num_hidden_layer=1):
+  def __init__(self, input_sz, output_sz, input_dim, alpha, num_hidden_layer=1):
     
     self.input_sz = input_sz
     self.output_sz = output_sz
     self.input_dim = input_dim
     self.num_hidden_layer = num_hidden_layer
+    self.alpha = alpha
 
-  def model(self):
-    model = tf.keras.models.Sequential([
-      tf.keras.layers.Flatten(input_shape=(input_dim)),
-      tf.keras.layers.Dense(input_sz, activation='relu'),
-      # tf.keras.layers.Dropout(0.2),
-      tf.keras.layers.Dense(output_sz, activation='softmax')
-    ])
-    return model
-
-
-class lstm_neural_net:
-  def __init__(self, input_sz, output_sz, input_dim, num_hidden_layer=1, dpr=0.0):
-    self.num_hidden_layer = num_hidden_layer
-    self.lstm1 = tf.keras.layers.LSTM(
-      input_sz, 
-      kernel_initializer="glorot_uniform",
-      input_shape=input_dim
-    )
-    self.ln1 = tf.keras.layers.LayerNormalization()
-    self.dpL = tf.keras.layers.Dropout(dpr)
-​
-​
-    self.out = tf.keras.layers.Dense(
-      output_sz, 
-      kernel_initializer="glorot_normal"
-    )
-    self.ln2 = tf.keras.layers.LayerNormalization()
-
-  def model(self):
-    model = tf.keras.models.Sequential([
-      tf.keras.layers.LSTM(input_sz, kernel_initializer="glorot_uniform",input_shape=input_dim)
-      tf.keras.layers.Dropout(dpr)
-      self.ln1,
-      self.out,
-      self.ln2
-    ])
-
+  def init_model(self):
+    model = models.Sequential()
+    model.add(layers.Dense( self.input_sz, activation='relu', input_dim=self.input_sz))
+    model.add(layers.Dense( self.input_sz, activation='relu'))
+    model.add(layers.Dense( self.output_sz, activation='relu'))
+    model.compile(optimizer=optimizers.Adam(lr=self.alpha),
+                  loss='mean_squared_error',
+                  metrics=['accuracy'])
     return model
