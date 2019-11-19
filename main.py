@@ -6,7 +6,7 @@ NUM_QUBITS = 2
 NUM_SIM = 10
 
 env = Environment(NUM_QUBITS) 
-bot = dqn(num_qubits=NUM_QUBITS)
+bot = drqn(num_qubits=NUM_QUBITS)
 
 def learning(bot, env):
   #for sim_times in range(NUM_SIM):
@@ -21,24 +21,27 @@ def learning(bot, env):
     reward = env.reward()
     bot.total_reward += reward
     ct+=1
+    """
+    print("state: ", state)
+    print("move: ", move)
+    print("reward: ", reward)
+    print()
+    """
 
   bot.learn_from_transition(state, reward, env.is_terminated())
   bot.total_reward += env.reward()
-  print("It's Done")
-  print("The total reward is ", bot.total_reward)
+  # print("It's Done")
+  # print("The total reward is ", bot.total_reward)
   env.reset()
   # bot.reset()
   return bot.total_reward
 
 reward_array = []
-episodes = 100
+episodes = 5
 for num in range(episodes):
   print("Times is "+str(num))
   r = learning(bot, env)
   reward_array.append(r)
-  print()
-  print()
-  print()
 
 xAxis = [ num for num in range(episodes)]
 _, ag = plt.subplots()

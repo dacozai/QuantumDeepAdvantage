@@ -50,7 +50,6 @@ class Environment:
         elif action[0] == "H":
             qc.h(action[1])
         elif action[0] == "CX":
-            print(action)
             qc.cx(action[1][0], action[1][1])
         elif action[0] == "CCX":
             qc.ccx(action[1][0], action[1][1], action[1][2])
@@ -62,7 +61,9 @@ class Environment:
         self.state = self.state[:,0] + 1j * self.state[:,1]
 
         
-        print('At end of step {}, action is {}, inner_product is {}'.format(self.steps, action, self.inner_product))
+        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
+        
+        # print('At end of step {}, action is {}, inner_product is {}'.format(self.steps, action, self.inner_product))
         
         self.steps += 1
         
@@ -84,12 +85,12 @@ class Environment:
     
     def reward(self):
         
-        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
-        
         if(np.abs(self.inner_product - 1) < self.MINIMAL_VALUE):
-            return 1 / self.steps
+            # return 1 / self.steps
+            return 100 / self.steps
         elif self.steps == self.MAXIMUM_MOVE:
-            return ( self.inner_product - 1) / self.steps
+            # return ( self.inner_product - 1) / self.steps
+            return -1
         else:
             return 0
 
