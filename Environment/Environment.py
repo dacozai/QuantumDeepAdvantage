@@ -61,9 +61,6 @@ class Environment:
         self.state = self.state[:,0] + 1j * self.state[:,1]
         
         self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
-
-        
-        self.inner_product = self.inner_product_measure() #calculate the distance between initial state and target state
         
         # print('At end of step {}, action is {}, inner_product is {}'.format(self.steps, action, self.inner_product))
         
