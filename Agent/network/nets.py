@@ -39,7 +39,7 @@ class vanila_neural_net:
                   metrics=['accuracy'])
     return model
 
-class cnn(vanila_neural_net):
+class lstm(vanila_neural_net):
 
   def __init__(self, input_sz, output_sz, input_dim, alpha, num_hidden_layer=1, dropout=0.0) -> None:
     super().__init__(input_sz,output_sz, input_dim, alpha)
