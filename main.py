@@ -34,13 +34,12 @@ def learning(bot, env):
 
 reward_array = []
 episodes = 1000
-gap = 100
+gap = 50
 for num in range(1, episodes+1):
   print("Times is "+str(num))
   learning(bot, env)
   if num%gap == 0:
-    # reward_array.append(bot.win_times/gap*100)
-    reward_array.append(bot.win_times)
+    reward_array.append(bot.win_times/gap*100)
     bot.total_reward = 0
     bot.win_times = 0
 
