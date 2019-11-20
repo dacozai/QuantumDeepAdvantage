@@ -117,7 +117,7 @@ class dqn:
 
 class drqn(dqn):
 
-  def __init__(self, num_qubits, gamma, alpha):
+  def __init__(self, num_qubits, gamma=0.9, alpha=10e-2):
     super().__init__(num_qubits=num_qubits, gamma=gamma, alpha=alpha)
     self.net_instance = lstm(self.input_sz, self.num_action, self.input_dim, self.alpha)
     self.q_network = self.net_instance.init_model()

@@ -1,6 +1,9 @@
 from Agent.dqn import *
 from Environment.Environment import *
 import matplotlib.pyplot as plt
+from itertools import count
+from matplotlib.animation import FuncAnimation
+import random
 
 NUM_QUBITS = 2
 NUM_SIM = 10
@@ -32,26 +35,32 @@ def learning(bot, env):
   # bot.reset()
   # return bot.total_reward
 
+######################################################################
 reward_array = []
-episodes = 1000
-gap = 50
+episodes = 100
+gap = 10
+
+xAxis = [ num for num in range(1, int(episodes/gap)+1 )]
+fig = plt.figure()
+_, ag = plt.subplots()
+
 for num in range(1, episodes+1):
   print("Times is "+str(num))
   learning(bot, env)
   if num%gap == 0:
     reward_array.append(bot.win_times/gap*100)
+    print("Agent achieve the target {} times and the ratio of success is {} %".format(bot.win_times, bot.win_times/gap*100))
+    print()
+    print()
     bot.total_reward = 0
     bot.win_times = 0
 
-xAxis = [ num for num in range(1, int(episodes/gap)+1 )]
-_, ag = plt.subplots()
 ag.plot(xAxis, reward_array, color = 'blue', label="DQN")
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-ag.set(xlabel='episodes', ylabel='average return(agents)',
+ag.set(xlabel='Per {} Training'.format(gap), ylabel='Number of Success',
       title='Learning curve')
 ag.grid()
 plt.show()
-
 
 
 
