@@ -36,6 +36,7 @@ def learning(bot, env):
   # return bot.total_reward
 
 ######################################################################
+
 reward_array = []
 episodes = 100
 gap = 10
